@@ -34,4 +34,14 @@ class SculpinKernel extends \Sculpin\Bundle\SculpinBundle\HttpKernel\AbstractKer
 
 ## How to use
 
-@TODO
+In your template:
+
+```php
+{% if page.related %}
+<ul>
+  {% for relate in page.related %}
+  <li><a href="{{ relate.url }}">{{ relate.title }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+```
