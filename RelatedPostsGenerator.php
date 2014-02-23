@@ -4,8 +4,8 @@ namespace Tsphethean\Sculpin\Bundle\RelatedPostsBundle;
 
 use Sculpin\Core\Sculpin;
 use Sculpin\Core\Event\SourceSetEvent;
-use Sculpin\Core\Source\SourceInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sculpin\Core\Permalink\SourcePermalinkFactory;
 
 /**
  * Related Posts Generator.
@@ -15,11 +15,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RelatedPostsGenerator implements EventSubscriberInterface {
 
   /**
+   * Permalink factory
+   *
+   * @var SourcePermalinkFactory
+   */
+  protected $permalinkFactory;
+
+  public function __construct(SourcePermalinkFactory $permalinkFactory) {
+    $this->permalinkFactory = $permalinkFactory;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     return array(
-      Sculpin::EVENT_BEFORE_RUN => array('beforeRun', 1000),
+      Sculpin::EVENT_BEFORE_RUN => array('beforeRun', 100),
     );
   }
 
@@ -57,17 +68,20 @@ class RelatedPostsGenerator implements EventSubscriberInterface {
           $tagMatch = array_merge($tagMatch, $tagsMap[$tag]);
         }
         $tagMatchCount = array_count_values($tagMatch);
+
+        // remove self from list of related sources
+        unset($tagMatchCount[$source->sourceid()]);
         asort($tagMatchCount);
-        // need to remove self...
 
         // Get information about the matching tags
         $relatedSources = array();
         foreach ($tagMatchCount as $match => $count) {
           $relatedSource = $allSources[$match];
+          $permalink = $this->permalinkFactory->create($relatedSource);
 
           $relatedSources[] = array(
             'title' => $relatedSource->data()->get('title'),
-            'url' => $relatedSource->relativePathname(),
+            'url' => $permalink->relativeUrlPath(),
           );
         }
 
@@ -75,5 +89,4 @@ class RelatedPostsGenerator implements EventSubscriberInterface {
       }
     }
   }
-
 }
