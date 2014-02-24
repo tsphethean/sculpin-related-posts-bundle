@@ -76,12 +76,16 @@ class RelatedPostsGenerator implements EventSubscriberInterface {
         // Get information about the matching tags
         $relatedSources = array();
         foreach ($tagMatchCount as $match => $count) {
-          $relatedSource = $allSources[$match];
-          $permalink = $this->permalinkFactory->create($relatedSource);
+          // @TODO - make limit configurable
+          if (count($relatedSources) == 5) {
+            break;
+          }
 
+          $relatedSource = $allSources[$match];
           $relatedSources[] = array(
+            // @TODO - figure out why the title won't come through in the source.
             'title' => $relatedSource->data()->get('title'),
-            'url' => $permalink->relativeUrlPath(),
+            'source' => $relatedSource,
           );
         }
 
