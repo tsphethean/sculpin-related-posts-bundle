@@ -81,6 +81,8 @@ class RelatedPostsGenerator implements EventSubscriberInterface {
             break;
           }
 
+          $relatedSource = $allSources[$match];
+           
           if (!$relatedSource->data()->get('draft')) {
             $relatedSources[] = array(
               // @TODO - figure out why the title won't come through in the source.
