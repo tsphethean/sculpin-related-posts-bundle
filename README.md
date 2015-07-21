@@ -12,7 +12,7 @@ Add this bundle in your ```sculpin.json``` file:
     // ...
     "require": {
         // ...
-        "tsphethean/sculpin-related-posts-bundle": "@dev"
+        "tsphethean/sculpin-related-posts-bundle": "~0.1.0"
     }
 }
 ```
