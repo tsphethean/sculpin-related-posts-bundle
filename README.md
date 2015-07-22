@@ -40,7 +40,7 @@ In your template:
 {% if page.related %}
 <ul>
   {% for relate in page.related %}
-  <li><a href="{{ relate.url }}">{{ relate.title }}</a></li>
+  <li><a href="{{ relate.source..url }}">{{ relate.title }}</a></li>
   {% endfor %}
 </ul>
 {% endif %}
